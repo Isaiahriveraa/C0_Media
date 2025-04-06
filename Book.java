@@ -6,7 +6,7 @@ import java.util.*;
 public class Book implements Media, Comparable<Book> {
     
     private String title;
-    private List<String> authors;
+    private List<String> listOfAuthors;
     private int numOfRatings = 0;
     private int totalRating = 0;
     private List<String> contentOfBook;
@@ -15,10 +15,10 @@ public class Book implements Media, Comparable<Book> {
     /*
      * 
      */
-    public Book (String titie, List<String> authors, Scanner content) {
-        authors = new ArrayList<>();
+    public Book (String title, List<String> authors, Scanner content) {
+        this.listOfAuthors = new ArrayList<>();
         for (String author: authors) {
-            authors.add(author);
+            listOfAuthors.add(author);
         }
         this.title = title;
         contentOfBook = new ArrayList<>();
@@ -41,7 +41,7 @@ public class Book implements Media, Comparable<Book> {
         }
         return content;
     }
-    
+
     /*
      * Behavior:
      *      Initally the method tries to compare average rating, if there is a tie or no ratings 
@@ -82,26 +82,25 @@ public class Book implements Media, Comparable<Book> {
     public String toString() {
         String allAuthors = "";
         if (numOfRatings == 0) {
-            
-            for (int i = 0; i < authors.size(); i++) {
-                if (i == 0 || i == authors.size() - 1) {
-                    allAuthors += authors.get(i);
+            for (int i = 0; i < listOfAuthors.size(); i++) {
+                if (i == 0) {
+                    allAuthors += listOfAuthors.get(i);
                 } else {
-                    allAuthors += ", " + authors.get(i);
+                    allAuthors += ", " + listOfAuthors.get(i);
                 }
             }
-            return title + " by " + allAuthors;
+            return title + " by " + "[" + allAuthors + "]";
         } else {
-            for (int i = 0; i < authors.size(); i++) {
-                if (i == 0 || i == authors.size() - 1) {
-                    allAuthors += authors.get(i);
+            for (int i = 0; i < listOfAuthors.size(); i++) {
+                if (i == 0) {
+                    allAuthors += listOfAuthors.get(i);
                 } else {
-                    allAuthors += ", " + authors.get(i);
+                    allAuthors += ", " + listOfAuthors.get(i);
                 }
             }
-
-            return title + " by " + allAuthors + ": " + getAverageRating() + " (" + numOfRatings
-                + " ratings)";
+            double roundedAvg = Math.round(getAverageRating() * 100) / 100.0;
+            return title + " by " + "[" + allAuthors + "]" + ": " + roundedAvg + " (" + 
+                numOfRatings + " ratings)";
         }
     }
 
@@ -112,9 +111,10 @@ public class Book implements Media, Comparable<Book> {
      *              If no ratings exist, returns 0.
      */
     public double getAverageRating() {
-        double average = (double) totalRating / numOfRatings;
-        double roundedAvg = Math.round(average * 100) / 100.0;
-        return roundedAvg;
+        if (numOfRatings == 0) {
+            return 0.0;
+        }
+        return (double) totalRating / numOfRatings;
     }
 
     /*
@@ -129,12 +129,12 @@ public class Book implements Media, Comparable<Book> {
      */
     public List<String> getArtists() {
 
-        List<String> listOfAuthors = new ArrayList<>();
+        List<String> returnedList = new ArrayList<>();
 
-        for (String author: authors) {
-            listOfAuthors.add(author);
+        for (String author: listOfAuthors) {
+            returnedList.add(author);
         }
-        return listOfAuthors;
+        return returnedList;
     }
 
     /*
